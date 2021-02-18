@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enable: false
+config:
+  openexchangerates:
+    url: https://openexchangerates.org/api/
+    token: 881e32c5642d4a39b15108085ac95384
+  base-currency: USD
+  gifs:
+    up-trend: rich
+    down-trend: broke
+  giphy:
+    url: https://api.giphy.com/v1/gifs/random
+    token: XUrURwQTrKhDSpEb6ZcYSL8HyIUGGMct
+    rating: g
+    resource: https://
+
