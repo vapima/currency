@@ -47,8 +47,8 @@ public class GifServiceImpl implements GifService {
             return inputStream.readAllBytes();
         } catch (IOException e) {
             log.warn("IOException of input stream gif:  " + e.getMessage());
+            throw new IllegalArgumentException("Image grab error.");  //TODO ???
         }
-        return null;
     }
 
     @Override

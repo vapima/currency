@@ -28,6 +28,9 @@ public class ForexServiceImpl implements ForexService {
         Historical yesterday = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().minusDays(1).toString());
         Historical today = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().toString());
         log.debug("Pair: " + baseCurrency + quotedCurrency + ".");
+        if (!today.getRates().containsKey(quotedCurrency) && !yesterday.getRates().containsKey(quotedCurrency)) {
+            throw new IllegalArgumentException(quotedCurrency + " code not found.");
+        }
         log.debug("Today: " + today.getRates().get(quotedCurrency) + ", yesterday: " + yesterday.getRates().get(quotedCurrency) + ".");
         if (today.getRates().get(quotedCurrency) > yesterday.getRates().get(quotedCurrency)) {
             return Trend.UP;
