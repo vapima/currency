@@ -41,10 +41,10 @@ class GifServiceImplTest {
     @MockBean
     private FileClient fileClient;
 
-    public static final String TEST_URL ="http://vapima.ru";
+    public static final String TEST_URL = "http://vapima.ru";
 
     @Test
-    void getTrendGif()  {
+    void getTrendGif() {
         Mockito.when(gifClient.getGif(anyString(), anyString(), anyString()))
                 .thenReturn(new Gif(new Data(TEST_URL)));
         byte[] body = {71};

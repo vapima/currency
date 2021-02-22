@@ -13,7 +13,6 @@ import ru.vapima.currency.service.CurrencyService;
 import ru.vapima.currency.service.ForexService;
 import ru.vapima.currency.service.GifService;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -36,6 +35,6 @@ class CurrencyServiceImplTest {
         Mockito.when(gifService.getTrendGif(Trend.UP))
                 .thenReturn(body);
         byte[] gifFile = currencyService.getGifOfForexDynamic("USD");
-        Assert.assertArrayEquals(body,gifFile);
+        Assert.assertArrayEquals(body, gifFile);
     }
 }
