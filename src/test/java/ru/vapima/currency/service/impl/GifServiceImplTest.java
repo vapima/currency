@@ -26,8 +26,6 @@ import java.util.HashMap;
 import static org.mockito.ArgumentMatchers.anyString;
 
 
-/*@RunWith(SpringRunner.class)*/
-//@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 @RunWith(SpringRunner.class)
 class GifServiceImplTest {
