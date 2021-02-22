@@ -27,12 +27,14 @@ public class ForexServiceImpl implements ForexService {
     public Trend getTrend(String quotedCurrency) {
         Historical yesterday = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().minusDays(1).toString());
         Historical today = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().toString());
-        log.debug("Pair: "+ baseCurrency+quotedCurrency + ".");
-        log.debug("Today: "+today.getRates().get(quotedCurrency) +", yesterday: "+ yesterday.getRates().get(quotedCurrency)+".");
+        log.debug("Pair: " + baseCurrency + quotedCurrency + ".");
+        log.debug("Today: " + today.getRates().get(quotedCurrency) + ", yesterday: " + yesterday.getRates().get(quotedCurrency) + ".");
         if (today.getRates().get(quotedCurrency) > yesterday.getRates().get(quotedCurrency)) {
             return Trend.UP;
-        } else {
+        } else if (today.getRates().get(quotedCurrency) < yesterday.getRates().get(quotedCurrency)) {
             return Trend.DOWN;
+        } else {
+            return Trend.FLAT;
         }
     }
 }

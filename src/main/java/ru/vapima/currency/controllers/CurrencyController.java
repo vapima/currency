@@ -16,7 +16,7 @@ public class CurrencyController {
     @GetMapping(produces = MediaType.IMAGE_GIF_VALUE)
     public @ResponseBody
     byte[] getCurrencyDynamicGif(@RequestParam(value = "currency") String quotedCurrency) {
-        log.debug("Input currency:"+quotedCurrency+".");
+        log.debug("Input currency:" + quotedCurrency + ".");
         return currencyService.getGifOfForexDynamic(quotedCurrency);
     }
 

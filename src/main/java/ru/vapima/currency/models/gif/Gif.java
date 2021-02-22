@@ -9,10 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Gif {
     private Data data;
-
-    public String getImageOriginalUrl() {
-        return data.getImageOriginalUrl();
-    }
 }
 
 

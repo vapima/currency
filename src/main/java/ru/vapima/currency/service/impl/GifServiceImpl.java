@@ -34,10 +34,13 @@ public class GifServiceImpl implements GifService {
     @Value("${config.gifs.up-trend}")
     private String upTrendTag;
 
+    @Value("${config.gifs.flat-trend}")
+    private String flatTrendTag;
+
     private byte[] getGif(String tag) {
         Gif gif = gifClient.getGif(tag, apiKey, rating);
-        log.debug("Random gif - " + gif.getImageOriginalUrl());
-        URI gifUrl = URI.create(gif.getImageOriginalUrl());
+        log.debug("Random gif - " + gif.getData().getImageOriginalUrl());
+        URI gifUrl = URI.create(gif.getData().getImageOriginalUrl());
         Response response = fileClient.downloadFile(gifUrl);
         Response.Body body = response.body();
         try (InputStream inputStream = body.asInputStream()) {
@@ -57,6 +60,9 @@ public class GifServiceImpl implements GifService {
             case DOWN:
                 log.debug("DOWN-TREND GIF: " + downTrendTag);
                 return getGif(downTrendTag);
+            case FLAT:
+                log.debug("DOWN-TREND GIF: " + flatTrendTag);
+                return getGif(flatTrendTag);
             default:
                 return null; //TODO NULL NOT GOOD
         }

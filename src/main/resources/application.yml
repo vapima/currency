@@ -13,9 +13,22 @@ config:
   gifs:
     up-trend: rich
     down-trend: broke
+    flat-trend: nothing
   giphy:
     url: https://api.giphy.com/v1/gifs/random
     token: XUrURwQTrKhDSpEb6ZcYSL8HyIUGGMct
     rating: g
     resource: https://
+logging:
+  file:
+    path: logs/dev_app.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: DEBUG
+    guru.springframework.controllers: DEBUG
+    ru.vapima.currency  : TRACE
 

@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-class Data {
+public class Data {
     @JsonProperty("image_original_url")
     private String imageOriginalUrl;
 }

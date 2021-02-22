@@ -15,7 +15,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public byte[] getGifOfForexDynamic(String quotedCurrency) {
-        Trend trend=forexService.getTrend(quotedCurrency);
+        Trend trend = forexService.getTrend(quotedCurrency);
         return gifService.getTrendGif(trend);
     }
 }
