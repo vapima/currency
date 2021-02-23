@@ -1,4 +1,4 @@
-package ru.vapima.currency.service.clients;
+package ru.vapima.currency.apiClients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;

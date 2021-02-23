@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author Vasily Pima
+ * Модель для передачи ошибки клиенту.
+ */
 @AllArgsConstructor
 @Setter
 @Getter

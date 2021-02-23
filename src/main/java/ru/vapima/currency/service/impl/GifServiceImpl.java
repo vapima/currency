@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.vapima.currency.models.Trend;
 import ru.vapima.currency.models.gif.Gif;
 import ru.vapima.currency.service.GifService;
-import ru.vapima.currency.service.clients.FileClient;
-import ru.vapima.currency.service.clients.GifClient;
+import ru.vapima.currency.apiClients.FileClient;
+import ru.vapima.currency.apiClients.GifClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +39,9 @@ public class GifServiceImpl implements GifService {
 
     private byte[] getGif(String tag) {
         Gif gif = gifClient.getGif(tag, apiKey, rating);
+        if (gif == null) {
+            throw new RuntimeException("Link image grab error.");
+        }
         log.debug("Random gif - " + gif.getData().getImageOriginalUrl());
         URI gifUrl = URI.create(gif.getData().getImageOriginalUrl());
         Response response = fileClient.downloadFile(gifUrl);
@@ -46,8 +49,8 @@ public class GifServiceImpl implements GifService {
         try (InputStream inputStream = body.asInputStream()) {
             return inputStream.readAllBytes();
         } catch (IOException e) {
-            log.warn("IOException of input stream gif:  " + e.getMessage());
-            throw new IllegalArgumentException("Image grab error.");  //TODO ???
+            log.error("IOException of input stream gif:  " + e);
+            throw new RuntimeException("Image grab error.");
         }
     }
 
@@ -60,11 +63,9 @@ public class GifServiceImpl implements GifService {
             case DOWN:
                 log.debug("DOWN-TREND GIF: " + downTrendTag);
                 return getGif(downTrendTag);
-            case FLAT:
+            default:
                 log.debug("DOWN-TREND GIF: " + flatTrendTag);
                 return getGif(flatTrendTag);
-            default:
-                return null; //TODO NULL NOT GOOD
         }
     }
 

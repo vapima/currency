@@ -9,7 +9,10 @@ import ru.vapima.currency.service.CurrencyService;
 
 import javax.validation.constraints.Pattern;
 
-
+/**
+ * @author Vasily Pima
+ * Endpoint получения рандомной гифки в зависимости от движения курса.
+ */
 @RestController
 @AllArgsConstructor
 @Slf4j
@@ -18,6 +21,11 @@ import javax.validation.constraints.Pattern;
 public class CurrencyController {
     private final CurrencyService currencyService;
 
+    /**
+     *
+     * @param quotedCurrency - котируемая валюта.
+     * @return Gif - случайная картинка с внешнего сервиса.
+     */
     @GetMapping(produces = MediaType.IMAGE_GIF_VALUE)
     public @ResponseBody
     byte[] getCurrencyDynamicGif(@RequestParam(value = "currency")

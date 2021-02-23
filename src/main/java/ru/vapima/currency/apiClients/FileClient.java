@@ -1,4 +1,4 @@
-package ru.vapima.currency.service.clients;
+package ru.vapima.currency.apiClients;
 
 import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;

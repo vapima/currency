@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.vapima.currency.models.Trend;
-import ru.vapima.currency.models.forex.Historical;
+import ru.vapima.currency.models.forex.HistoricalDto;
 import ru.vapima.currency.service.ForexService;
-import ru.vapima.currency.service.clients.ForexClient;
+import ru.vapima.currency.apiClients.ForexClient;
 
 import java.time.LocalDate;
 
@@ -25,16 +25,23 @@ public class ForexServiceImpl implements ForexService {
 
     @Override
     public Trend getTrend(String quotedCurrency) {
-        Historical yesterday = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().minusDays(1).toString());
-        Historical today = forexClient.getHistoricalAtDate(quotedCurrency, baseCurrency, apiKey, LocalDate.now().toString());
-        log.debug("Pair: " + baseCurrency + quotedCurrency + ".");
+        HistoricalDto yesterday = forexClient.getHistoricalAtDate(
+                quotedCurrency, baseCurrency, apiKey, LocalDate.now().minusDays(1).toString());
+        HistoricalDto today = forexClient.getHistoricalAtDate(
+                quotedCurrency, baseCurrency, apiKey, LocalDate.now().toString());
+        if (yesterday == null || today == null) {
+            throw new RuntimeException("Rate history grab error.");
+        }
+        log.debug("Pair: {}{} .", baseCurrency, quotedCurrency);
         if (!today.getRates().containsKey(quotedCurrency) && !yesterday.getRates().containsKey(quotedCurrency)) {
             throw new IllegalArgumentException(quotedCurrency + " code not found.");
         }
-        log.debug("Today: " + today.getRates().get(quotedCurrency) + ", yesterday: " + yesterday.getRates().get(quotedCurrency) + ".");
-        if (today.getRates().get(quotedCurrency) > yesterday.getRates().get(quotedCurrency)) {
+        Double todayRate = today.getRates().get(quotedCurrency);
+        Double yesterdayRate = yesterday.getRates().get(quotedCurrency);
+        log.debug("Today: {}, yesterday: {}.", todayRate, yesterdayRate);
+        if (todayRate > yesterdayRate) {
             return Trend.UP;
-        } else if (today.getRates().get(quotedCurrency) < yesterday.getRates().get(quotedCurrency)) {
+        } else if (todayRate < yesterdayRate) {
             return Trend.DOWN;
         } else {
             return Trend.FLAT;
