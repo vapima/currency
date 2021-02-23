@@ -23,7 +23,7 @@ class CurrencyControllerTest {
 
     @SneakyThrows
     @Test
-    void getCurrencyDynamicGif() throws Exception {
+    void getCurrencyDynamicGif() {
         mockMvc.perform(get("/dynamic")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .param("currency", "RUB"))

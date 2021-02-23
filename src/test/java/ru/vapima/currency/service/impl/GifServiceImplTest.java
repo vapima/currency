@@ -14,13 +14,11 @@ import ru.vapima.currency.models.Trend;
 import ru.vapima.currency.models.gif.Data;
 import ru.vapima.currency.models.gif.Gif;
 import ru.vapima.currency.service.GifService;
-import ru.vapima.currency.service.clients.FileClient;
-import ru.vapima.currency.service.clients.GifClient;
+import ru.vapima.currency.apiClients.FileClient;
+import ru.vapima.currency.apiClients.GifClient;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,8 +45,8 @@ class GifServiceImplTest {
                 .thenReturn(new Gif(new Data(TEST_URL)));
         byte[] body = {71};
         Response response = Response.builder() //TODO BULLSHIT
-                .request(Request.create("GET", "URL", Collections.emptyMap(), body, StandardCharsets.UTF_8))
-                .status(200)
+                .request(Request.create(Request.HttpMethod.GET,"", new HashMap<>(),body,null,null))
+                .status(200) //TODO depric delete
                 .reason("Test")
                 .headers(new HashMap<>())
                 .body(new ByteArrayInputStream(body), body.length)
@@ -61,6 +59,4 @@ class GifServiceImplTest {
         Assert.assertArrayEquals(body, trendGif);
     }
 
-    /*
-     */
 }

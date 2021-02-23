@@ -1,6 +1,6 @@
 package ru.vapima.currency.service.impl;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -10,14 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.vapima.currency.models.Trend;
-import ru.vapima.currency.models.forex.Historical;
+import ru.vapima.currency.models.forex.HistoricalDto;
 import ru.vapima.currency.service.ForexService;
-import ru.vapima.currency.service.clients.ForexClient;
+import ru.vapima.currency.apiClients.ForexClient;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,39 +32,56 @@ class ForexServiceImplTest {
     private ForexClient forexClient;
 
     public static final String QUOTED_CURRENCY = "JPY";
+    public static final Double TEST_RATE=88.84;
 
     @Value("${config.base-currency}")
     private String baseCurrency;
 
     @Test
-    void checkGetTrends() {
-        Assertions.assertEquals(checkGetTrendFromForex(Trend.UP), Trend.UP);
-        Assertions.assertEquals(checkGetTrendFromForex(Trend.DOWN), Trend.DOWN);
-        Assertions.assertEquals(checkGetTrendFromForex(Trend.FLAT), Trend.FLAT);
-    }
-
-    Trend checkGetTrendFromForex(Trend trend) {
-        Double rate = new Random().nextDouble();
-        Map<String, Double> ratesTod = new HashMap<>();
-        ratesTod.put(QUOTED_CURRENCY, rate);
-        Map<String, Double> ratesYes = new HashMap<>();
-        switch (trend) {
-            case UP:
-                ratesYes.put(QUOTED_CURRENCY, rate - 1);
-                break;
-            case DOWN:
-                ratesYes.put(QUOTED_CURRENCY, rate + 1);
-                break;
-            case FLAT:
-                ratesYes.put(QUOTED_CURRENCY, rate);
-                break;
-        }
+    void checkFlatTrend() {
+        Map<String, Double> ratesToday = new HashMap<>();
+        ratesToday.put(QUOTED_CURRENCY, TEST_RATE);
+        Map<String, Double> ratesYesterday = new HashMap<>();
+        ratesYesterday.put(QUOTED_CURRENCY, TEST_RATE);
         Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
                 anyString(), eq(LocalDate.now().toString())))
-                .thenReturn(new Historical(baseCurrency, ratesTod));
+                .thenReturn(new HistoricalDto(baseCurrency, ratesToday));
         Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
                 anyString(), eq(LocalDate.now().minusDays(1).toString())))
-                .thenReturn(new Historical(baseCurrency, ratesYes));
-        return forexService.getTrend(QUOTED_CURRENCY);
+                .thenReturn(new HistoricalDto(baseCurrency, ratesYesterday));
+        Trend trend = forexService.getTrend(QUOTED_CURRENCY);
+        Assert.assertEquals(Trend.FLAT,trend);
+    }
+
+    @Test
+    void checkUpTrend() {
+        Map<String, Double> ratesToday = new HashMap<>();
+        ratesToday.put(QUOTED_CURRENCY, TEST_RATE);
+        Map<String, Double> ratesYesterday = new HashMap<>();
+        ratesYesterday.put(QUOTED_CURRENCY, TEST_RATE-1);
+        Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
+                anyString(), eq(LocalDate.now().toString())))
+                .thenReturn(new HistoricalDto(baseCurrency, ratesToday));
+        Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
+                anyString(), eq(LocalDate.now().minusDays(1).toString())))
+                .thenReturn(new HistoricalDto(baseCurrency, ratesYesterday));
+        Trend trend = forexService.getTrend(QUOTED_CURRENCY);
+        Assert.assertEquals(Trend.UP,trend);
+    }
+
+    @Test
+    void checkDownTrend() {
+        Map<String, Double> ratesToday = new HashMap<>();
+        ratesToday.put(QUOTED_CURRENCY, TEST_RATE);
+        Map<String, Double> ratesYesterday = new HashMap<>();
+        ratesYesterday.put(QUOTED_CURRENCY, TEST_RATE+1);
+        Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
+                anyString(), eq(LocalDate.now().toString())))
+                .thenReturn(new HistoricalDto(baseCurrency, ratesToday));
+        Mockito.when(forexClient.getHistoricalAtDate(anyString(), anyString(),
+                anyString(), eq(LocalDate.now().minusDays(1).toString())))
+                .thenReturn(new HistoricalDto(baseCurrency, ratesYesterday));
+        Trend trend = forexService.getTrend(QUOTED_CURRENCY);
+        Assert.assertEquals(Trend.DOWN,trend);
     }
 }
