@@ -1,32 +1,49 @@
 <h3>Funny currency dynamic</h3>
+
 * Сервис, который обращается к сервису курсов валют, и отдает gif в ответ.
+
 * Отдаем рандомную картинку с тэгом соответствующим движению курса со вчера на сегодня.
 
+
 ***
+
 <b>Внимание!</b>
 Для смены базовой валюты отличной от USD, 
 понадится другой API KEY от внешнего API openexchangerates.org.
 API KEY указаный в настройках, является бесплатным и позваляет получать данные только с базовой валютой USD.
+
 ***
+
 <h3>Запуск Docker:</h3>
+
 ```
 gradlew clean test build
 ```
+
 ```
 docker build -t currency .
 ```
+
 ```
 docker run -d -p 8080:8080 currency
 ```
+
 ***
+
 <h3>Запуск  Jar:</h3>
+
 ```
 gradlew clean test build
 ```
+
 ```
 java -jar build/libs/currency-0.0.1-SNAPSHOT.jar
 ```
+
 ***
+
 <h3>Используемые API:</h3>
+
 REST API курсов валют - https://docs.openexchangerates.org/  
+
 REST API гифок - https://developers.giphy.com/docs/api#quick-start-guide  
